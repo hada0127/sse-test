@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="messages"></div>
+
+  <script>
+    const eventSource = new EventSource('http://localhost:3100/events');
+    const messages = document.getElementById('messages');
+
+    eventSource.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      const div = document.createElement('div');
+      if(data.message) {
+        div.textContent = `메세지 : ${data.message}`;
+      } else {
+        div.textContent = `시간: ${data.time}, 값: ${data.value}`;
+      }
+      messages.appendChild(div);
+    };
+
+    eventSource.onerror = function(error) {
+      console.error('SSE 에러:', error);
+      eventSource.close();
+    };
+  </script>
+</body>
+</html>
